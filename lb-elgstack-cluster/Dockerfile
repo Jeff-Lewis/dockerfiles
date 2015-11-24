@@ -1,0 +1,39 @@
+FROM phusion/baseimage:0.9.17
+MAINTAINER Tobias Kern <tobkern1980@googlemail.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV JAVA_HOME /opt/graylog/embedded/jre
+
+# first test not working nor finished !!
+RUN apt-get update && \
+    yum install -y curl ntp ntpdate tzdata && \
+    rpm -Uvh https://packages.graylog2.org/repo/packages/graylog-1.2-repository-el7_latest.rpm && \
+    sudo yum install graylog-server graylog-web && \
+    sed -i "0,/^\s*$/s//\/opt\/graylog\/embedded\/share\/docker\/run_graylogctl\n/" /etc/rc.local && \
+    sed -i "0,/^\s*$/s//tail\ \-F\ \/var\/log\/graylog\/server\/current\ \&\n/" /etc/rc.local && \
+    echo 'GRAYLOG_INSTALLATION_SOURCE="docker"' > /opt/graylog/embedded/share/graylog/installation-source.sh && \
+    apt-get clean && \
+    rm -rf /tmp/* /var/tmp/*
+
+VOLUME /var/opt/graylog/data
+VOLUME /var/log/graylog
+VOLUME /opt/graylog/plugin
+VOLUME /opt/graylog/conf/nginx/ca
+
+# web interface separate node
+EXPOSE 9000
+EXPOSE 443
+# gelf tcp
+EXPOSE 12201
+# gelf udp
+EXPOSE 12201/udp
+# rest api
+EXPOSE 12900
+# etcd
+EXPOSE 4001
+# syslog
+EXPOSE 514
+EXPOSE 514/udp
+
+CMD ["/opt/graylog/embedded/share/docker/my_init"]
