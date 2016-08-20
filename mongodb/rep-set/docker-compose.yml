@@ -1,0 +1,7 @@
+MongoDB:
+  image: debian:jessie
+  ports:
+    - "27017:27017"
+  volumes:
+    - /srv/docker/mongodb/db1:/var/lib/mongodb
+  restart: always
