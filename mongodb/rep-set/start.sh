@@ -1,5 +1,9 @@
 #!/bin/bash
-
+#
+#
+#
+# Source: https://github.com/inlight-media/docker-mongodb-replica-set/blob/master/start.sh
+#
 # Create database directories
 mkdir /srv/docker/mongodb/data/db/db-001
 mkdir /srv/docker/mongodb/data/db/db-002
